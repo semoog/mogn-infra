@@ -3,7 +3,7 @@ Homelab cluster automation playbook.
 
 ## Currently:
 
-- Configures and starts an HA [etcd](https://etcd.io/) cluster based on an arbitrary number of nodes
+- Configures and starts an HA [etcd](https://etcd.io/) cluster based on an arbitrary number of nodes.
 
 ## Requirements
 
