@@ -16,6 +16,10 @@ Homelab cluster automation playbook.
         node-2 ip=<node-2-ip>
         node-3 ip=<node-3-ip>
         ...
+        
+## Running the playbook
+
+    ansible-playbook provision.yml
 
 ## TODO
 
