@@ -3,7 +3,7 @@ Homelab cluster automation playbook.
 
 ## Currently:
 
-- Configures and starts an HA etcd cluster based on an arbitrary number of nodes
+- Configures and starts an HA [etcd](https://etcd.io/) cluster based on an arbitrary number of nodes
 
 ## Requirements
 
@@ -22,5 +22,7 @@ Homelab cluster automation playbook.
 
 ## TODO
 
-- HA k3s automation
-- HA rke automation
+- ~~Part 1 - HA etcd~~
+    - 3e3fea6ae2b58a9b43c9fb29cf19efe2f1a7177e
+- Part 2 - HA k3s
+- Part 3 - HA rke
