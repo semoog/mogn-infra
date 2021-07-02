@@ -1,5 +1,5 @@
 # mogn-infra
-Homelab k3s cluster automation.
+Homelab cluster automation.
 
 ## Currently:
 
