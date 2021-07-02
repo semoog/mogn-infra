@@ -117,3 +117,18 @@
 
 - name: enable / start etcd service
   service: name=etcd.service state=started enabled=yes
+
+- name: verify etcd service health
+  shell: "curl --cacert /etc/etcd/etcd-ca.crt --cert /etc/etcd/server.crt --key /etc/etcd/server.key https://{{ hostvars[inventory_hostname].ip }}:2379/health"
+  register: etcd_health_cmd
+
+- set_fact: 
+    etcd: "{{ etcd_health_cmd.stdout | from_json }}"
+
+- block:
+    - name: "end play if etcd is unhealthy"
+      debug:
+        msg: "!! etcd is unhealthy, manual intervention required. Ending play !!"
+
+    - meta: end_play
+  when: etcd.health == 'false'
