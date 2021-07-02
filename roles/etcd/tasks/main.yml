@@ -1,0 +1,24 @@
+---
+
+# => checks
+
+- name: check etcd version
+  shell: "etcd --version | grep {{ ETCD_VERSION }}"
+  register: etcd_version_match
+  ignore_errors: yes
+
+# => etcd install (if it isn't installed or our version doesn't match)
+
+- import_tasks: install-etcd.yml
+  when: etcd_version_match.rc != 0
+
+# => testing
+
+# - name: test local action
+#   command: hostname
+#   register: hostname
+#   delegate_to: 127.0.0.1
+
+# - name: print hostname
+#   debug:
+#     var: hostname

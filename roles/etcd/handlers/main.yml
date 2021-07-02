@@ -1,0 +1,12 @@
+---
+- name: cleanup etcd tarball
+  file:
+    path: /tmp/etcd-v{{ ETCD_VERSION }}-linux-amd64.tar.gz
+    state: absent
+  listen: cleanup
+
+- name: cleanup etcd tmp directory
+  file:
+    path: /tmp/etcd
+    state: absent
+  listen: cleanup

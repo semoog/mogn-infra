@@ -1,0 +1,15 @@
+---
+- name: provision HA k3s cluster
+  hosts: mogn
+  user: mogn
+  become: True
+  vars:
+    ETCD_DOWNLOAD_URL: https://storage.googleapis.com/etcd
+    ETCD_VERSION: 3.5.0
+  # vars_files:
+  #   - vars/secrets.yml
+  roles:
+    - common
+    - etcd
+    # - k3s
+    # - rancher-rke
