@@ -7,8 +7,7 @@ Homelab cluster automation playbook.
 
 ## Requirements
 
-- a control node (Ansible installed, this repo cloned)
-- host nodes setup for SSH access from the control node
+- a control node (Ansible installed, this repo cloned) with ssh access to the host nodes
 - a `hosts` file setup in the following way:
     
         [cluster-name]
