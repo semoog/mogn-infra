@@ -49,4 +49,4 @@
 
 - name: move etc to bin directory
   command: mv -f /tmp/etcd/etcdctl /usr/local/bin
-  notify: cleanup
+  notify: cleanup-etcd-install

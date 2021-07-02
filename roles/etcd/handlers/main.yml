@@ -3,10 +3,14 @@
   file:
     path: /tmp/etcd-v{{ ETCD_VERSION }}-linux-amd64.tar.gz
     state: absent
-  listen: cleanup
+  listen: cleanup-etcd-install
 
 - name: cleanup etcd tmp directory
   file:
     path: /tmp/etcd
     state: absent
-  listen: cleanup
+  listen: cleanup-etcd-install
+
+- name: reload systemctl
+  command: systemctl daemon-reload
+  listen: systemctl-daemon-reload
