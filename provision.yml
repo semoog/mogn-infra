@@ -1,6 +1,6 @@
 ---
 - name: provision HA k3s cluster
-  hosts: mogn
+  hosts: all
   user: mogn
   become: True
   vars:
