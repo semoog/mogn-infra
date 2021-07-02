@@ -7,13 +7,15 @@ Homelab cluster automation playbook.
 
 ## Requirements
 
-- nodes setup for SSH access from the machine that will run this playbook
+- a control node (Ansible installed, this repo cloned)
+- host nodes setup for SSH access from the control node
 - a `hosts` file setup in the following way:
     
         [cluster-name]
         node-1 ip=<node-1-ip>
         node-2 ip=<node-2-ip>
         node-3 ip=<node-3-ip>
+        ...
 
 ## TODO
 
