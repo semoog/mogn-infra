@@ -23,6 +23,6 @@ Homelab cluster automation playbook.
 ## TODO
 
 - ~~Part 1 - HA etcd~~
-    - 3e3fea6
+    - [3e3fea6](https://github.com/semoog/mogn-infra/commit/3e3fea6ae2b58a9b43c9fb29cf19efe2f1a7177e)
 - Part 2 - HA k3s
 - Part 3 - HA rke
