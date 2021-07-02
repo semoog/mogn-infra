@@ -7,7 +7,10 @@ Homelab cluster automation playbook.
 
 ## Requirements
 
-- a control node (Ansible installed, this repo cloned) with ssh access to the host nodes
+- a control node
+    - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) installed
+    - [cfssl](https://github.com/cloudflare/cfssl) installed (used to generate certs)
+    - ssh access to the host nodes (update the `user` field in `provision.yml`)
 - a `hosts` file setup in the following way:
     
         [cluster-name]
