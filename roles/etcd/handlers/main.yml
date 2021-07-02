@@ -11,6 +11,15 @@
     state: absent
   listen: cleanup-etcd-install
 
+- name: restore perms on server key file
+  file:
+    path: "{{ playbook_dir }}/certs/{{ inventory_hostname }}-key.pem"
+    owner: root
+    group: root
+    mode: 0600
+  delegate_to: 127.0.0.1
+  listen: cleanup-etcd-certs
+
 - name: reload systemctl
   command: systemctl daemon-reload
   listen: systemctl-daemon-reload

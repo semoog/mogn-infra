@@ -19,6 +19,11 @@
   register: node_etcd_cert
   delegate_to: 127.0.0.1
 
+- name: check for existing server key
+  stat:
+    path: /etc/etcd/server.key
+  register: node_etcd_server_key
+
 # => installing etcd (if it isn't installed or our version doesn't match)
 
 - import_tasks: install-etcd.yml
@@ -47,14 +52,6 @@
   delegate_to: 127.0.0.1
   when: not node_etcd_cert.stat.exists
 
-- name: take ownership of server key file (so we can copy it out to the node)
-  file:
-    path: "{{ playbook_dir }}/certs/{{ inventory_hostname }}-key.pem"
-    owner: root
-    group: root
-    mode: 0755 # yeah I know
-  delegate_to: 127.0.0.1
-
 - name: create node directory for etcd certs
   file:
     path: /etc/etcd
@@ -79,6 +76,15 @@
     group: root
     mode: 0600
 
+- name: take ownership of server key file (so we can copy it out to the node)
+  file:
+    path: "{{ playbook_dir }}/certs/{{ inventory_hostname }}-key.pem"
+    owner: root
+    group: root
+    mode: 0755 # yeah I know
+  delegate_to: 127.0.0.1
+  when: not node_etcd_server_key.stat.exists
+
 - name: copy node server key to node etcd directory
   copy:
     src: "{{ playbook_dir }}/certs/{{ inventory_hostname }}-key.pem"
@@ -86,6 +92,7 @@
     owner: root
     group: root
     mode: 0600
+  notify: cleanup-etcd-certs
 
 # => configuring and starting etcd  
 
