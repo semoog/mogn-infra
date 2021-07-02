@@ -1,5 +1,5 @@
 # mogn-infra
-Homelab cluster automation.
+Homelab cluster automation playbook.
 
 ## Currently:
 
@@ -7,6 +7,7 @@ Homelab cluster automation.
 
 ## Requirements
 
+- nodes setup for SSH access from the machine that will run this playbook
 - a `hosts` file setup in the following way:
     
         [cluster-name]
