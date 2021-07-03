@@ -1,0 +1,30 @@
+---
+
+- name: initialize control node / repo
+  hosts: localhost
+  connection: local
+  tasks:
+
+  - name: init hosts
+    copy:
+      dest: "{{ playbook_dir }}/hosts"
+      content: |
+        [servers]
+        node-1 ip=
+        node-2 ip=
+      mode: 0664
+  
+  - name: init vars/
+    file:
+      path: "{{ playbook_dir }}/vars"
+      state: directory
+      mode: 0775
+
+  - name: init vars/secrets.yml
+    copy:
+      dest: "{{ playbook_dir }}/vars/secrets.yml"
+      content: |
+        ---
+
+        K3S_TOKEN: ""
+      mode: 0664
