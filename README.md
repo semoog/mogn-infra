@@ -1,6 +1,6 @@
 # mogn-infra
 <br>
-Homelab cluster automation playbook.
+Homelab cluster automation playbooks.
 
 Configures and spins up a highly available [etcd](https://etcd.io/), [k3s](https://k3s.io/), [rancher](https://rancher.com/products/rancher/) cluster based on an arbitrary number of nodes.
 
