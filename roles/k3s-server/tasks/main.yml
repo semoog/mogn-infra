@@ -13,6 +13,7 @@
 - name: install k3s on node
   shell: curl -sfL https://get.k3s.io | sh -
   environment:
+    INSTALL_K3S_VERSION: "{{ K3S_VERSION }}"
     K3S_DATASTORE_ENDPOINT: "{{ etcd_endpoints }}"
     K3S_DATASTORE_CAFILE: '/etc/etcd/etcd-ca.crt'
     K3S_DATASTORE_CERTFILE: '/etc/etcd/server.crt'

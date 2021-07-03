@@ -5,6 +5,7 @@
 - name: check etcd version
   shell: "etcd --version | grep {{ ETCD_VERSION }}"
   register: etcd_version_match
+  changed_when: False
   ignore_errors: yes
 
 - name: check for existing cert
@@ -121,9 +122,10 @@
 - name: enable / start etcd service
   service: name=etcd.service state=started enabled=yes
 
-- name: verify etcd service health
+- name: check etcd service health
   shell: "curl --cacert /etc/etcd/etcd-ca.crt --cert /etc/etcd/server.crt --key /etc/etcd/server.key https://{{ hostvars[inventory_hostname].ip }}:2379/health"
   register: etcd_health_cmd
+  changed_when: False
 
 - set_fact: 
     etcd: "{{ etcd_health_cmd.stdout | from_json }}"
