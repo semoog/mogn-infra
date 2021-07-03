@@ -1,0 +1,84 @@
+---
+
+# => checks
+
+- name: check prereqs - cattle-system namespace
+  become: False
+  shell: kubectl get namespaces | grep cattle-system
+  changed_when: False
+  ignore_errors: yes
+  register: cattle_system_namespace
+  delegate_to: 127.0.0.1
+
+- name: check prereqs - cert-manager namespace
+  become: False
+  shell: kubectl get namespaces | grep cert-manager
+  changed_when: False
+  ignore_errors: yes
+  register: cert_manager_namespace
+  delegate_to: 127.0.0.1
+
+- name: check prereqs - cert-manager installed
+  become: False
+  shell: kubectl get pods -n cert-manager | grep cert-manager
+  changed_when: False
+  ignore_errors: yes
+  register: cert_manager_installed
+  delegate_to: 127.0.0.1
+
+- name: check prereqs - rancher installed
+  become: False
+  shell: kubectl -n cattle-system rollout status deploy/rancher | grep successfully
+  changed_when: False
+  ignore_errors: yes
+  register: rancher_installed
+  delegate_to: 127.0.0.1
+
+# => setup
+
+- name: add rancher helm repo
+  become: False
+  shell: helm repo add rancher-stable https://releases.rancher.com/server-charts/stable && helm repo update
+  changed_when: False
+  delegate_to: 127.0.0.1
+
+- name: create cattle-system namespace
+  become: False
+  command: kubectl create namespace cattle-system
+  when: cattle_system_namespace.rc != 0
+  delegate_to: 127.0.0.1
+
+# => cert-manager
+
+- name: cert-manager CustomResourceDefinition
+  become: False
+  shell: "kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/{{ CERT_MANAGER_VERSION }}/cert-manager.crds.yaml"
+  when: cert_manager_namespace.rc != 0
+  delegate_to: 127.0.0.1
+
+- name: add jetstack helm repo
+  become: False
+  shell: helm repo add jetstack https://charts.jetstack.io && helm repo update
+  changed_when: False
+  delegate_to: 127.0.0.1
+
+- name: create cert-manager namespace
+  become: False
+  command: kubectl create namespace cert-manager
+  when: cert_manager_namespace.rc != 0
+  delegate_to: 127.0.0.1
+
+- name: install cert-manager
+  become: False
+  shell: "helm install cert-manager jetstack/cert-manager --namespace cert-manager --version {{ CERT_MANAGER_VERSION }}"
+  when: cert_manager_installed.rc != 0
+  delegate_to: 127.0.0.1
+
+- name: install rancher
+  become: False
+  shell: "helm install rancher rancher-stable/rancher --namespace cattle-system --set hostname={{ DNS_NAME }} --version {{ RANCHER_VERSION }}"
+  when: rancher_installed.rc != 0
+  delegate_to: 127.0.0.1
+
+- debug:
+    msg: "!! Done. Browse to {{ DNS_NAME }} to finish Rancher configuration. Don't forget to source ~/.profile for kubectl access !!"

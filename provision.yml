@@ -7,7 +7,14 @@
   roles:
     - common
 
-- name: provision cluster servers
+# - name: provision external load balancers
+#   hosts: load-balancers
+#   user: mogn
+#   become: True
+#   roles:
+#     - load-balancer
+
+- name: provision cluster servers for etcd and k3s
   hosts: servers
   user: mogn
   become: True
@@ -20,9 +27,8 @@
   roles:
     - etcd
     - k3s-server
-    # - rke-server
 
-- name: provision cluster agents
+- name: provision cluster agents for etcd and k3s
   hosts: agents
   user: mogn
   become: True
@@ -30,7 +36,17 @@
     - vars/secrets.yml
   roles:
     - k3s-agent
-    # - rke-agent
+  
+- import_playbook: kubectl.yml
+  when: nokubectl is undefined or nokubectl == False
 
-- import_playbook: post.yml
-  when: nopost is undefined or nopost == False
+- name: provision cluster servers for rancher
+  hosts: servers
+  user: mogn
+  become: True
+  vars:
+    CERT_MANAGER_VERSION: v1.0.4
+    RANCHER_VERSION: 2.5.8
+    DNS_NAME: rancher.mogn.co
+  roles:
+    - rancher

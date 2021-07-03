@@ -1,12 +1,13 @@
 ---
 
-- name: post install
+- name: control node kubectl setup
   hosts: servers[0]
   user: mogn
   tasks:
 
   - name: grab kubeconfig from the first server node
     become: True
+    changed_when: False
     fetch:
       src: /etc/rancher/k3s/k3s.yaml
       dest: "{{ playbook_dir }}/kubeconfig/kubeconfig.yml"
@@ -17,6 +18,7 @@
       path: "{{ playbook_dir }}/kubeconfig/kubeconfig.yml"
       regexp: "127.0.0.1"
       replace: "{{ hostvars[inventory_hostname].ip }}"
+    changed_when: False
     delegate_to: 127.0.0.1
   
   - name: init .kube
