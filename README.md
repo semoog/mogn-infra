@@ -16,7 +16,7 @@ HA assuming a minimum of 3 nodes.
     - [helm](https://helm.sh/docs/intro/install/) installed
     - ssh access to the host nodes (update the `user` field in `provision.yml` to match)
 - 1+ server / agent node
-- *optional:* 1+ external load balancer node, otherwise [traefik](https://doc.traefik.io/traefik/) will be used (ships with k3s)
+- *optional:* 1+ external load balancer node, otherwise [traefik](https://doc.traefik.io/traefik/) will be used internally (ships with k3s)
 - a `hosts` file (template can be created with `ansible-playbook init.yml`):
     
         [servers]
