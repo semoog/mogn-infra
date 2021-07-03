@@ -30,3 +30,6 @@
   roles:
     - k3s-agent
     # - rke-agent
+
+- import_playbook: post.yml
+  when: nopost is undefined or nopost == False

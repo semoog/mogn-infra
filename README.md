@@ -33,8 +33,10 @@ Configures and spins up an HA [etcd](https://etcd.io/) + [k3s](https://k3s.io/) 
 <br>
 
 ### Initialize `hosts` and `vars/secrets.yml` files (optional): 
-    
-    ansible-playbook pre.yml
+
+<br>
+  
+    ansible-playbook init.yml
 
 Don't forget to update the values to fit your cluster.
 
@@ -42,13 +44,15 @@ _---_
 
 ### Main provisioning playbook:
 
+<br>
+
     ansible-playbook provision.yml
 
-_---_
+<br>
 
-### Automatically set kubeconfig on control node (unix):
+*The default behavior of `provision.yml` is to run the `post.yml` playbook at the end which copies and adds the kubeconfig to the local control node for access to the cluster. If you would like to skip this step append `-e nopost=True` to the command e.g:*
 
-    ansible-playbook post.yml
+    ansible-playbook provision.yml -e nopost=True
 <br>
 
 ## TODO
