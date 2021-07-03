@@ -9,7 +9,7 @@ Configures and spins up an HA [etcd](https://etcd.io/) + [k3s](https://k3s.io/) 
     - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) installed
     - [cfssl](https://github.com/cloudflare/cfssl) installed (used to generate certs)
     - ssh access to the host nodes (update the `user` field in `provision.yml` to match)
-- a `hosts` file:
+- a `hosts` file (can be created with `ansible-playbook init.yml`):
     
         [servers]
         node-1 ip=<node-1-ip>
@@ -19,7 +19,7 @@ Configures and spins up an HA [etcd](https://etcd.io/) + [k3s](https://k3s.io/) 
 
         [agents]
         node-5 ip=<node-5-ip>
-- a `vars/secrets.yml` file:
+- a `vars/secrets.yml` file (can be created with `ansible-playbook init.yml`):
 
         ---
 
