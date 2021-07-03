@@ -13,11 +13,19 @@ Homelab cluster automation playbook.
     - ssh access to the host nodes (update the `user` field in `provision.yml`)
 - a `hosts` file setup in the following way:
     
-        [cluster-name]
+        [servers]
         node-1 ip=<node-1-ip>
         node-2 ip=<node-2-ip>
         node-3 ip=<node-3-ip>
         ...
+
+        [agents]
+        node-5 ip=<node-5-ip>
+- a `vars/secrets.yml` file setup in the following way:
+
+        ---
+
+        K3S_TOKEN: "<CUSTOM_TOKEN>"
         
 ## Running the playbook
 
@@ -27,6 +35,6 @@ Homelab cluster automation playbook.
 
 - ~~Part 1 - HA etcd~~
     - merged with [3e3fea6](https://github.com/semoog/mogn-infra/commit/3e3fea6ae2b58a9b43c9fb29cf19efe2f1a7177e)
-- Part 2 - HA k3s
-    - [PR](https://github.com/semoog/mogn-infra/pull/1)
+- ~~Part 2 - HA k3s~~
+    - merged with [PR - k3s roles](https://github.com/semoog/mogn-infra/pull/1)
 - Part 3 - HA rke

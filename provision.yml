@@ -14,15 +14,19 @@
   vars:
     ETCD_DOWNLOAD_URL: https://storage.googleapis.com/etcd
     ETCD_VERSION: 3.5.0
+  vars_files:
+    - vars/secrets.yml
   roles:
     - etcd
-    # - k3s-server
+    - k3s-server
     # - rke-server
 
 - name: provision cluster agents
   hosts: agents
   user: mogn
   become: True
+  vars_files:
+    - vars/secrets.yml
   roles:
-    # - k3s-agent
+    - k3s-agent
     # - rke-agent
