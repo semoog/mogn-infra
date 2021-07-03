@@ -14,6 +14,8 @@
   vars:
     ETCD_DOWNLOAD_URL: https://storage.googleapis.com/etcd
     ETCD_VERSION: 3.5.0
+  vars_files:
+    - vars/secrets.yml
   roles:
     - etcd
     - k3s-server

@@ -17,4 +17,5 @@
     K3S_DATASTORE_CAFILE: '/etc/etcd/etcd-ca.crt'
     K3S_DATASTORE_CERTFILE: '/etc/etcd/server.crt'
     K3S_DATASTORE_KEYFILE: '/etc/etcd/server.key'
+    K3S_TOKEN: "{{ K3S_TOKEN }}"
   when: ansible_facts.services['k3s.service'] is not defined
