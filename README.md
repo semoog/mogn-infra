@@ -78,6 +78,7 @@ _---_
     - merged with [3e3fea6](https://github.com/semoog/mogn-infra/commit/3e3fea6ae2b58a9b43c9fb29cf19efe2f1a7177e)
 - ~~Part 2 - HA k3s~~
     - merged with [PR - k3s roles](https://github.com/semoog/mogn-infra/pull/1)
-- Part 3 - HA rancher w/ lb
+- ~~Part 3 - HA rancher~~
+    - merged with [PR - rancher role](https://github.com/semoog/mogn-infra/pull/2)
 - Part 4 - TLS
 - Part 5 - HA load balancing
