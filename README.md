@@ -61,6 +61,7 @@ _---_
     source ~/.profile
     
     kubectl get nodes
+<br>
 
 ## TODO
 
