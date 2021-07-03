@@ -2,11 +2,15 @@
 <br>
 Homelab cluster automation playbook.
 
-Configures and spins up an [etcd](https://etcd.io/) + [k3s](https://k3s.io/) + [rancher](https://rancher.com/products/rancher/) cluster based on an arbitrary number of nodes.
+Configures and spins up a HA [etcd](https://etcd.io/), [k3s](https://k3s.io/), [rancher](https://rancher.com/products/rancher/) cluster based on an arbitrary number of nodes.
 
 HA assuming a minimum of 2 server nodes.
 <br>
 <br>
+![example layout](mogn-infra_example-layout.png)
+<br>
+<br>
+*note: rancher / k3s agent role is available, I just don't have any in my cluster yet*
 
 ## Requirements
 
@@ -74,11 +78,18 @@ _---_
 ## TODO
 
 - *Part 0 (?) - PXE boot*
+
 - ~~Part 1 - HA etcd~~
     - merged with [3e3fea6](https://github.com/semoog/mogn-infra/commit/3e3fea6ae2b58a9b43c9fb29cf19efe2f1a7177e)
+
 - ~~Part 2 - HA k3s~~
     - merged with [PR - k3s roles](https://github.com/semoog/mogn-infra/pull/1)
+
 - ~~Part 3 - HA rancher~~
     - merged with [PR - rancher role](https://github.com/semoog/mogn-infra/pull/2)
-- Part 4 - TLS
-- Part 5 - HA load balancing
+
+- Part 4 - Load balancer setup with nginx
+
+- Part 5 - TLS
+
+- Part ? - HA load balancing
