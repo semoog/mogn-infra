@@ -16,7 +16,7 @@
     ETCD_VERSION: 3.5.0
   roles:
     - etcd
-    # - k3s-server
+    - k3s-server
     # - rke-server
 
 - name: provision cluster agents

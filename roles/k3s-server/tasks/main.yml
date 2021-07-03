@@ -1,0 +1,20 @@
+---
+
+# => checks
+
+- name: get service facts
+  service_facts:
+
+# => configuring and installing k3s
+
+- name: create list of nodes to be added into the cluster
+  set_fact: etcd_endpoints={%for host in groups['servers']%}https://{{hostvars[host].ip}}:2379{% if not loop.last %},{% endif %}{% endfor %}
+
+- name: install k3s on node
+  shell: curl -sfL https://get.k3s.io | sh -
+  environment:
+    K3S_DATASTORE_ENDPOINT: "{{ etcd_endpoints }}"
+    K3S_DATASTORE_CAFILE: '/etc/etcd/etcd-ca.crt'
+    K3S_DATASTORE_CERTFILE: '/etc/etcd/server.crt'
+    K3S_DATASTORE_KEYFILE: '/etc/etcd/server.key'
+  when: ansible_facts.services['k3s.service'] is not defined
