@@ -55,6 +55,13 @@ _---_
     ansible-playbook provision.yml -e nopost=True
 <br>
 
+## Verifying the cluster
+<br>
+
+    source ~/.profile
+    
+    kubectl get nodes
+
 ## TODO
 
 - *Part 0 (?) - PXE boot*
