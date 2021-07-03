@@ -25,6 +25,8 @@
   hosts: agents
   user: mogn
   become: True
+  vars_files:
+    - vars/secrets.yml
   roles:
-    # - k3s-agent
+    - k3s-agent
     # - rke-agent

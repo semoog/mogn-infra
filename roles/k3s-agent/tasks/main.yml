@@ -1,0 +1,15 @@
+---
+
+# => checks
+
+- name: get service facts
+  service_facts:
+
+# => configuring and installing k3s
+
+- name: install k3s-agent on node
+  shell: curl -sfL https://get.k3s.io | sh -
+  environment:
+    K3S_TOKEN: "{{ K3S_TOKEN }}"
+    K3S_URL: "https://{{ hostvars[groups['servers'][0]].ip }}:6443"
+  when: ansible_facts.services['k3s-agent.service'] is not defined
