@@ -112,8 +112,11 @@
     src: templates/etcd.service.j2 
     dest: /lib/systemd/system/etcd.service 
     mode: 0644
-  notify:
-    - systemctl-daemon-reload
+  notify: systemctl-daemon-reload
+
+# forces the handler (systemctl-daemon-reload) to run immediately
+# instead of at the end of the play
+- meta: flush_handlers
 
 - name: enable / start etcd service
   service: name=etcd.service state=started enabled=yes
