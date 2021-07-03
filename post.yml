@@ -1,0 +1,43 @@
+---
+
+- name: post install
+  hosts: servers[0]
+  user: mogn
+  tasks:
+
+  - name: grab kubeconfig from the first server node
+    become: True
+    fetch:
+      src: /etc/rancher/k3s/k3s.yaml
+      dest: "{{ playbook_dir }}/kubeconfig/kubeconfig.yml"
+      flat: yes
+
+  - name: replace 127.0.0.1 with k3s ip
+    replace:
+      path: "{{ playbook_dir }}/kubeconfig/kubeconfig.yml"
+      regexp: "127.0.0.1"
+      replace: "{{ hostvars[inventory_hostname].ip }}"
+    delegate_to: 127.0.0.1
+  
+  - name: init .kube
+    file:
+      path: "$HOME/.kube"
+      state: directory
+      mode: 0775
+    delegate_to: 127.0.0.1
+
+  - name: copy kubeconfig to .kube
+    copy:
+      src: "{{ playbook_dir }}/kubeconfig/kubeconfig.yml"
+      dest: "$HOME/.kube/{{ inventory_hostname }}-kubeconfig.yml"
+      mode: '0644'
+    delegate_to: 127.0.0.1
+
+  - name: point KUBECONFIG at the new cluster
+    lineinfile:
+      path: $HOME/.profile
+      line: "export KUBECONFIG=\"$KUBECONFIG:$HOME/.kube/{{ inventory_hostname }}-kubeconfig.yml\""
+    delegate_to: 127.0.0.1
+
+  - debug:
+      msg: "!! Don't forget to source ~/.profile !!"

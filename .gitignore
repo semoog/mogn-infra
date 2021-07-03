@@ -1,3 +1,4 @@
 hosts
 certs/
 vars/secrets.yml
+kubeconfig/

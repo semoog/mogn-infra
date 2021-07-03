@@ -1,7 +1,10 @@
 # mogn-infra
+<br>
 Homelab cluster automation playbook.
 
 Configures and spins up an HA [etcd](https://etcd.io/) + [k3s](https://k3s.io/) cluster based on an arbitrary number of nodes.
+<br>
+<br>
 
 ## Requirements
 
@@ -15,19 +18,38 @@ Configures and spins up an HA [etcd](https://etcd.io/) + [k3s](https://k3s.io/) 
         node-1 ip=<node-1-ip>
         node-2 ip=<node-2-ip>
         node-3 ip=<node-3-ip>
-        ...
+        
 
         [agents]
-        node-5 ip=<node-5-ip>
+        node-4 ip=<node-4-ip>
 - a `vars/secrets.yml` file (can be created with `ansible-playbook init.yml`):
 
         ---
 
         K3S_TOKEN: "<CUSTOM_TOKEN>"
-        
-## Running the playbook
+<br>
+
+## Running the playbook(s)
+<br>
+
+### Initialize `hosts` and `vars/secrets.yml` files (optional): 
+    
+    ansible-playbook init.yml
+
+Don't forget to update the values to fit your cluster.
+
+_---_
+
+### Main provisioning playbook:
 
     ansible-playbook provision.yml
+
+_---_
+
+### Automatically set kubeconfig on control node (unix):
+
+    ansible-playbook post.yml
+<br>
 
 ## TODO
 
