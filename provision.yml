@@ -1,13 +1,28 @@
 ---
-- name: provision HA k3s cluster
+
+- name: common tasks
   hosts: all
+  user: mogn
+  become: True
+  roles:
+    - common
+
+- name: provision cluster servers
+  hosts: servers
   user: mogn
   become: True
   vars:
     ETCD_DOWNLOAD_URL: https://storage.googleapis.com/etcd
     ETCD_VERSION: 3.5.0
   roles:
-    - common
     - etcd
-    # - k3s
-    # - rancher-rke
+    # - k3s-server
+    # - rke-server
+
+- name: provision cluster agents
+  hosts: agents
+  user: mogn
+  become: True
+  roles:
+    # - k3s-agent
+    # - rke-agent
