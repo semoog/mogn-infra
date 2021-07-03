@@ -1,17 +1,15 @@
 # mogn-infra
 Homelab cluster automation playbook.
 
-## Currently:
-
-- Configures and starts an HA [etcd](https://etcd.io/) cluster based on an arbitrary number of nodes.
+Configures and spins up an HA [etcd](https://etcd.io/) + [k3s](https://k3s.io/) cluster based on an arbitrary number of nodes.
 
 ## Requirements
 
 - a control node
     - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) installed
     - [cfssl](https://github.com/cloudflare/cfssl) installed (used to generate certs)
-    - ssh access to the host nodes (update the `user` field in `provision.yml`)
-- a `hosts` file setup in the following way:
+    - ssh access to the host nodes (update the `user` field in `provision.yml` to match)
+- a `hosts` file:
     
         [servers]
         node-1 ip=<node-1-ip>
@@ -21,7 +19,7 @@ Homelab cluster automation playbook.
 
         [agents]
         node-5 ip=<node-5-ip>
-- a `vars/secrets.yml` file setup in the following way:
+- a `vars/secrets.yml` file:
 
         ---
 
