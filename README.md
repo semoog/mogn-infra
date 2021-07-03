@@ -34,7 +34,7 @@ Configures and spins up an HA [etcd](https://etcd.io/) + [k3s](https://k3s.io/) 
 
 ### Initialize `hosts` and `vars/secrets.yml` files (optional): 
     
-    ansible-playbook init.yml
+    ansible-playbook pre.yml
 
 Don't forget to update the values to fit your cluster.
 
