@@ -28,3 +28,6 @@
 
         K3S_TOKEN: ""
       mode: 0664
+
+  - debug:
+      msg: "!! Don't forget to update the hosts / secrets files !!"
