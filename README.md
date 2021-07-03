@@ -13,11 +13,14 @@ Homelab cluster automation playbook.
     - ssh access to the host nodes (update the `user` field in `provision.yml`)
 - a `hosts` file setup in the following way:
     
-        [cluster-name]
+        [servers]
         node-1 ip=<node-1-ip>
         node-2 ip=<node-2-ip>
         node-3 ip=<node-3-ip>
         ...
+
+        [agents]
+        node-5 ip=<node-5-ip>
         
 ## Running the playbook
 
