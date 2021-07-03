@@ -2,7 +2,7 @@
 <br>
 Homelab cluster automation playbook.
 
-Configures and spins up a HA [etcd](https://etcd.io/), [k3s](https://k3s.io/), [rancher](https://rancher.com/products/rancher/) cluster based on an arbitrary number of nodes.
+Configures and spins up a highly available [etcd](https://etcd.io/), [k3s](https://k3s.io/), [rancher](https://rancher.com/products/rancher/) cluster based on an arbitrary number of nodes.
 
 HA assuming a minimum of 2 server nodes.
 <br>
