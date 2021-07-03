@@ -21,6 +21,11 @@ Homelab cluster automation playbook.
 
         [agents]
         node-5 ip=<node-5-ip>
+- a `vars/secrets.yml` file setup in the following way:
+
+        ---
+
+        K3S_TOKEN: "<CUSTOM_TOKEN>"
         
 ## Running the playbook
 
