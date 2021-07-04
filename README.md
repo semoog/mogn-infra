@@ -33,18 +33,19 @@ HA assuming a minimum of 2 server nodes.
 
         [loadbalancers] <- optional
         lb-1 ip=<lb-1-ip>
-- a `vars/secrets.yml` file (template can be created with `ansible-playbook init.yml`):
+- a `vars/env.yml` file (template can be created with `ansible-playbook init.yml`):
 
         ---
 
         K3S_TOKEN: "<CUSTOM_TOKEN>"
+        DNS_NAME: "<CUSTOM_DNS_NAME>"
 - change the value of `DNS_NAME` and `user` in `provision.yml`
 <br>
 
 ## Running the playbook(s)
 <br>
 
-### Initialize `hosts` and `vars/secrets.yml` files (optional): 
+### Initialize `hosts` and `vars/env.yml` files (optional): 
 
 <br>
   

@@ -20,14 +20,15 @@
       state: directory
       mode: 0775
 
-  - name: init vars/secrets.yml
+  - name: init vars/env.yml
     copy:
-      dest: "{{ playbook_dir }}/vars/secrets.yml"
+      dest: "{{ playbook_dir }}/vars/env.yml"
       content: |
         ---
 
-        K3S_TOKEN: ""
+        K3S_TOKEN: "sup3rS3cr177ok3N"
+        DNS_NAME: "rancher.home"
       mode: 0664
 
   - debug:
-      msg: "!! Don't forget to update the hosts / secrets files !!"
+      msg: "!! Don't forget to update the hosts / env files. Only run this once. !!"

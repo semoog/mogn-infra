@@ -2,31 +2,28 @@
 
 - name: Common
   hosts: all
-  user: mogn
   become: True
   roles:
     - common
 
 - name: Servers | Provision (etcd + k3s)
   hosts: servers
-  user: mogn
   become: True
   vars:
     ETCD_DOWNLOAD_URL: https://storage.googleapis.com/etcd
     ETCD_VERSION: 3.5.0
     K3S_VERSION: v1.21.2+k3s1
   vars_files:
-    - vars/secrets.yml
+    - vars/env.yml
   roles:
     - etcd
     - k3s-server
 
 - name: Worker / Agent | Provision (k3s)
   hosts: agents
-  user: mogn
   become: True
   vars_files:
-    - vars/secrets.yml
+    - vars/env.yml
   roles:
     - k3s-agent
   
@@ -35,20 +32,29 @@
 
 - name: Servers | Provision (rancher)
   hosts: servers
-  user: mogn
-  become: True
+  become: False
   vars:
     CERT_MANAGER_VERSION: v1.0.4
     RANCHER_VERSION: 2.5.8
-    DNS_NAME: rancher.mogn.co
+  vars_files:
+    - vars/env.yml
   roles:
     - rancher
 
 - name: Load Balancers | Provision (nginx)
   hosts: loadbalancers
-  user: mogn
+  gather_facts: False
   become: True
-  vars:
-    DNS_NAME: rancher.mogn.co
+  vars_files:
+    - vars/env.yml
   roles:
     - load-balancer
+
+- name: Finished!
+  hosts: 127.0.0.1
+  vars_files:
+    - vars/env.yml
+  tasks:
+
+    - debug:
+        msg: "!! Done. Create a DNS record or /etc/hosts entry for the load balancer / server ({{ groups['loadbalancers'][0] is defined and hostvars[groups['loadbalancers'][0]].ip or hostvars[groups['servers'][0]].ip }} -> {{ DNS_NAME }}), then browse to {{ DNS_NAME }} to finish Rancher configuration. Don't forget to source ~/.profile for kubectl access !!"
