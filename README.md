@@ -18,7 +18,7 @@ HA assuming a minimum of 2 server nodes.
     - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) installed
     - [cfssl](https://github.com/cloudflare/cfssl) installed (used to generate certs)
     - [helm](https://helm.sh/docs/intro/install/) installed
-    - ssh access to the host nodes (update the `user` field in `provision.yml` to match)
+    - ssh access to the host nodes
 - 1+ server / agent node
 - *optional:* 1+ external load balancer node, otherwise [traefik](https://doc.traefik.io/traefik/) will be used internally (ships with k3s)
 - a `hosts` file (template can be created with `ansible-playbook init.yml`):
@@ -39,7 +39,6 @@ HA assuming a minimum of 2 server nodes.
 
         K3S_TOKEN: "<CUSTOM_TOKEN>"
         DNS_NAME: "<CUSTOM_DNS_NAME>"
-- change the value of `DNS_NAME` and `user` in `provision.yml`
 <br>
 
 ## Running the playbook(s)
