@@ -96,9 +96,8 @@ Browse to the DNS_NAME url (e.g `rancher.mogn.co`) that you set in the `provisio
 
 - ~~Part 4 - nginx rancher load balancer~~
     - merged with [PR - nginx lb](https://github.com/semoog/mogn-infra/pull/3)
+    - TODO: keepalived HA
 
 - Part 5 - TLS
 
 - Part 6 - traefik / metallb application load balancer
-
-- Part ? - HA rancher load balancing (keepalived)
