@@ -92,11 +92,11 @@ Browse to the DNS_NAME url (e.g `rancher.mogn.co`) that you set in the `provisio
 - ~~Part 3 - HA rancher~~
     - merged with [PR - rancher role](https://github.com/semoog/mogn-infra/pull/2)
 
-- ~~Part 4 - nginx cluster load balancer~~
+- ~~Part 4 - nginx rancher load balancer~~
     - merged with [PR - nginx lb](https://github.com/semoog/mogn-infra/pull/3)
 
 - Part 5 - TLS
 
-- Part 6 - traefik / metallb application lb
+- Part 6 - traefik / metallb application load balancer
 
-- Part ? - HA load balancing
+- Part ? - HA rancher load balancing
