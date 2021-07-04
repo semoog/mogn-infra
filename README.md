@@ -21,7 +21,7 @@ HA assuming a minimum of 2 server nodes.
     - ssh access to the host nodes
 - 1+ server / agent node
 - *optional:* 1+ external load balancer node, otherwise [traefik](https://doc.traefik.io/traefik/) will be used internally (ships with k3s)
-- a `hosts` file (template can be created with `ansible-playbook init.yml`):
+- a `hosts` file:
     
         [servers]
         node-1 ip=<node-1-ip>
@@ -33,12 +33,14 @@ HA assuming a minimum of 2 server nodes.
 
         [loadbalancers] <- optional
         lb-1 ip=<lb-1-ip>
-- a `vars/env.yml` file (template can be created with `ansible-playbook init.yml`):
+- a `vars/env.yml` file:
 
         ---
 
         K3S_TOKEN: "<CUSTOM_TOKEN>"
         DNS_NAME: "<CUSTOM_DNS_NAME>"
+        
+     A template for these files can be created with `ansible-playbook init.yml`
 <br>
 
 ## Running the playbook(s)
@@ -75,7 +77,7 @@ _---_
     kubectl get nodes
 <br>
 
-Browse to the DNS_NAME url (e.g `rancher.mogn.co`) that you set in the `provision` playbook and you should see the rancher welcome screen.
+Browse to the `DNS_NAME` url (e.g `rancher.mogn.co`) that you set in the `vars/env.yml` file and you should see the rancher welcome screen.
 <br>
 <br>
 
@@ -94,9 +96,8 @@ Browse to the DNS_NAME url (e.g `rancher.mogn.co`) that you set in the `provisio
 
 - ~~Part 4 - nginx rancher load balancer~~
     - merged with [PR - nginx lb](https://github.com/semoog/mogn-infra/pull/3)
+    - TODO: keepalived HA
 
 - Part 5 - TLS
 
 - Part 6 - traefik / metallb application load balancer
-
-- Part ? - HA rancher load balancing
