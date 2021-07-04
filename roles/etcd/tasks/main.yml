@@ -8,41 +8,20 @@
   changed_when: False
   ignore_errors: yes
 
-# => installing etcd (if it isn't installed or our version doesn't match)
+# => install (if it isn't installed or our version doesn't match)
 
-- import_tasks: etcd.yml
+- import_tasks: etcd-install.yml
   when: etcd_version_match.rc != 0
 
-# => setting up certs
+# => configuring certificates
 
 - import_tasks: certs.yml
 
-# => configuring and starting etcd  
+# => configuring and enabling
 
-- name: etcd | create list of nodes to be added into the cluster
-  set_fact: etcd_nodelist={%for host in groups['servers']%}{{hostvars[host].inventory_hostname}}=https://{{hostvars[host].ip}}:2380{% if not loop.last %},{% endif %}{% endfor %}
+- import_tasks: etcd.yml
 
-- name: etcd | create etcd.conf on node
-  template:
-    src: templates/etcd.conf.j2
-    dest: /etc/etcd/etcd.conf
-    owner: root
-    group: root
-    mode: 0644
-
-- name: etcd | create service
-  template: 
-    src: templates/etcd.service.j2 
-    dest: /lib/systemd/system/etcd.service 
-    mode: 0644
-  notify: systemctl-daemon-reload
-
-# forces the handler (systemctl-daemon-reload) to run immediately
-# instead of at the end of the play
-- meta: flush_handlers
-
-- name: etcd | enable / start service
-  service: name=etcd.service state=started enabled=yes
+# => verifying etcd service health
 
 - name: etcd | check service health
   shell: "curl --cacert /etc/etcd/etcd-ca.crt --cert /etc/etcd/server.crt --key /etc/etcd/server.key https://{{ hostvars[inventory_hostname].ip }}:2379/health"

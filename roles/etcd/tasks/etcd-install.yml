@@ -1,0 +1,57 @@
+---
+
+# => download
+
+- name: etcd | create download dir
+  file:
+    path: /tmp/etcd
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
+- name: etcd | download
+  get_url:
+    url: "{{ ETCD_DOWNLOAD_URL }}/v{{ ETCD_VERSION }}/etcd-v{{ ETCD_VERSION }}-linux-amd64.tar.gz"
+    dest: "/tmp/etcd-v{{ ETCD_VERSION }}-linux-amd64.tar.gz"
+    owner: root
+    group: root
+    mode: 0600
+    force: True
+
+- name: etcd | extract
+  unarchive:
+    src: "/tmp/etcd-v{{ ETCD_VERSION }}-linux-amd64.tar.gz"
+    dest: /tmp/etcd
+    owner: root
+    group: root
+    mode: 0600
+    extra_opts:
+      - --strip-components=1
+    decrypt: True
+    remote_src: True
+
+- name: etcd | set permissions on etc
+  file:
+    path: /tmp/etcd/etcd
+    state: file
+    owner: root
+    group: root
+    mode: 0700
+
+- name: etcd | set permissions on etcdctl
+  file:
+    path: /tmp/etcd/etcdctl
+    state: file
+    owner: root
+    group: root
+    mode: 0700
+
+# => install
+
+- name: etcd | move etcd to bin
+  command: mv -f /tmp/etcd/etcd /usr/local/bin
+
+- name: etcd | move etcdctl to bin
+  command: mv -f /tmp/etcd/etcdctl /usr/local/bin
+  notify: cleanup-etcd-install

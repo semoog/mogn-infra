@@ -1,0 +1,33 @@
+---
+
+# => checks
+
+- name: cert-manager | prerequisite check | namespace
+  shell: kubectl get namespaces | grep cert-manager
+  changed_when: False
+  ignore_errors: yes
+  register: cert_manager_namespace
+  delegate_to: 127.0.0.1
+
+# => configure
+
+- name: cert-manager | CustomResourceDefinition
+  shell: "kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/{{ CERT_MANAGER_VERSION }}/cert-manager.crds.yaml"
+  when: cert_manager_namespace.rc != 0
+  delegate_to: 127.0.0.1
+
+- name: cert-manager | add jetstack helm repo
+  shell: helm repo add jetstack https://charts.jetstack.io && helm repo update
+  changed_when: False
+  delegate_to: 127.0.0.1
+
+- name: cert-manager | create cert-manager namespace
+  command: kubectl create namespace cert-manager
+  when: cert_manager_namespace.rc != 0
+  delegate_to: 127.0.0.1
+
+# => install
+
+- name: cert-manager | install
+  shell: "helm install cert-manager jetstack/cert-manager --namespace cert-manager --version {{ CERT_MANAGER_VERSION }}"
+  delegate_to: 127.0.0.1

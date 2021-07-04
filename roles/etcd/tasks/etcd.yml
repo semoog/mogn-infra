@@ -1,53 +1,28 @@
 ---
 
-- name: etcd | create download dir
-  file:
-    path: /tmp/etcd
-    state: directory
+# => configure
+
+- name: etcd | create list of nodes to be added into the cluster
+  set_fact: etcd_nodelist={%for host in groups['servers']%}{{hostvars[host].inventory_hostname}}=https://{{hostvars[host].ip}}:2380{% if not loop.last %},{% endif %}{% endfor %}
+
+- name: etcd | create etcd.conf on node
+  template:
+    src: templates/etcd.conf.j2
+    dest: /etc/etcd/etcd.conf
     owner: root
     group: root
-    mode: 0700
+    mode: 0644
 
-- name: etcd | download
-  get_url:
-    url: "{{ ETCD_DOWNLOAD_URL }}/v{{ ETCD_VERSION }}/etcd-v{{ ETCD_VERSION }}-linux-amd64.tar.gz"
-    dest: "/tmp/etcd-v{{ ETCD_VERSION }}-linux-amd64.tar.gz"
-    owner: root
-    group: root
-    mode: 0600
-    force: True
+- name: etcd | create service
+  template: 
+    src: templates/etcd.service.j2 
+    dest: /lib/systemd/system/etcd.service 
+    mode: 0644
+  notify: systemctl-daemon-reload
 
-- name: etcd | extract
-  unarchive:
-    src: "/tmp/etcd-v{{ ETCD_VERSION }}-linux-amd64.tar.gz"
-    dest: /tmp/etcd
-    owner: root
-    group: root
-    mode: 0600
-    extra_opts:
-      - --strip-components=1
-    decrypt: True
-    remote_src: True
+# forces the handler (systemctl-daemon-reload) to run immediately
+# instead of at the end of the play
+- meta: flush_handlers
 
-- name: etcd | set permissions on etc
-  file:
-    path: /tmp/etcd/etcd
-    state: file
-    owner: root
-    group: root
-    mode: 0700
-
-- name: etcd | set permissions on etcdctl
-  file:
-    path: /tmp/etcd/etcdctl
-    state: file
-    owner: root
-    group: root
-    mode: 0700
-
-- name: etcd | move etcd to bin
-  command: mv -f /tmp/etcd/etcd /usr/local/bin
-
-- name: etcd | move etcdctl to bin
-  command: mv -f /tmp/etcd/etcdctl /usr/local/bin
-  notify: cleanup-etcd-install
+- name: etcd | enable / start service
+  service: name=etcd.service state=started enabled=yes

@@ -19,7 +19,7 @@
     path: /etc/etcd/server.key
   register: node_etcd_server_key
 
-# => cert setup
+# => setup
 
 - name: etcd certs | create local directory for cert storage
   file:

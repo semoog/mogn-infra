@@ -1,4 +1,4 @@
-hosts
 certs/
-vars/env.yml
+hosts
 kubeconfig/
+vars/env.yml
