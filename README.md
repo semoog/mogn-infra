@@ -38,7 +38,7 @@ HA assuming a minimum of 2 server nodes.
         ---
 
         K3S_TOKEN: "<CUSTOM_TOKEN>"
-- change the value of `DNS_NAME` in `provision.yml`
+- change the value of `DNS_NAME` and `user` in `provision.yml`
 <br>
 
 ## Running the playbook(s)
@@ -75,6 +75,10 @@ _---_
     kubectl get nodes
 <br>
 
+Browse to the DNS_NAME url (e.g `rancher.mogn.co`) that you set in the `provision` playbook and you should see the rancher welcome screen.
+<br>
+<br>
+
 ## TODO
 
 - *Part 0 (?) - PXE boot*
@@ -88,7 +92,8 @@ _---_
 - ~~Part 3 - HA rancher~~
     - merged with [PR - rancher role](https://github.com/semoog/mogn-infra/pull/2)
 
-- Part 4 - Load balancer setup with nginx
+- ~~Part 4 - nginx cluster load balancer~~
+    - merged with [PR - nginx lb](https://github.com/semoog/mogn-infra/pull/3)
 
 - Part 5 - TLS
 
