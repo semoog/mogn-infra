@@ -6,7 +6,7 @@
   roles:
     - common
 
-- name: Servers | Provision (etcd + k3s)
+- name: Server | Provision (etcd + k3s)
   hosts: servers
   become: True
   vars:
@@ -30,7 +30,7 @@
 - import_playbook: kubectl.yml
   when: nokubectl is undefined or nokubectl == False
 
-- name: Servers | Provision (rancher)
+- name: Server | Provision (rancher)
   hosts: servers
   become: False
   vars:
@@ -41,7 +41,7 @@
   roles:
     - rancher
 
-- name: Load Balancers | Provision (nginx)
+- name: Load Balancer | Provision (nginx)
   hosts: loadbalancers
   gather_facts: False
   become: True
