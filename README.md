@@ -101,4 +101,4 @@ Browse to the DNS_NAME url (e.g `rancher.mogn.co`) that you set in the `provisio
 
 - Part 6 - traefik / metallb application load balancer
 
-- Part ? - HA rancher load balancing
+- Part ? - HA rancher load balancing (keepalived)
