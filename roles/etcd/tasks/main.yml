@@ -10,12 +10,12 @@
 
 # => installing etcd (if it isn't installed or our version doesn't match)
 
-- import_tasks: install-etcd.yml
+- import_tasks: etcd.yml
   when: etcd_version_match.rc != 0
 
 # => setting up certs
 
-- import_tasks: setup-certs.yml
+- import_tasks: certs.yml
 
 # => configuring and starting etcd  
 
