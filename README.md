@@ -31,7 +31,7 @@ HA assuming a minimum of 2 server nodes.
         [agents] <- optional
         node-4 ip=<node-4-ip>
 
-        [load-balancers] <- optional
+        [loadbalancers] <- optional
         lb-1 ip=<lb-1-ip>
 - a `vars/secrets.yml` file (template can be created with `ansible-playbook init.yml`):
 
