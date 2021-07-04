@@ -1,7 +1,6 @@
---- 
-- name: install fail2ban on ansible hosts
-  apt: 
+---
+
+- name: fail2ban | install
+  package: 
     name: 'fail2ban'
     state: latest
-    update_cache: yes
-    cache_valid_time: 3600

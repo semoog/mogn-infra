@@ -1,20 +1,13 @@
 ---
 
-- name: common tasks
+- name: Common
   hosts: all
   user: mogn
   become: True
   roles:
     - common
 
-# - name: provision external load balancers
-#   hosts: load-balancers
-#   user: mogn
-#   become: True
-#   roles:
-#     - load-balancer
-
-- name: provision cluster servers for etcd and k3s
+- name: Servers | Provision (etcd + k3s)
   hosts: servers
   user: mogn
   become: True
@@ -28,7 +21,7 @@
     - etcd
     - k3s-server
 
-- name: provision cluster agents for etcd and k3s
+- name: Worker / Agent | Provision (k3s)
   hosts: agents
   user: mogn
   become: True
@@ -40,7 +33,7 @@
 - import_playbook: kubectl.yml
   when: nokubectl is undefined or nokubectl == False
 
-- name: provision cluster servers for rancher
+- name: Servers | Provision (rancher)
   hosts: servers
   user: mogn
   become: True
@@ -50,3 +43,12 @@
     DNS_NAME: rancher.mogn.co
   roles:
     - rancher
+
+- name: Load Balancers | Provision (nginx)
+  hosts: loadbalancers
+  user: mogn
+  become: True
+  vars:
+    DNS_NAME: rancher.mogn.co
+  roles:
+    - load-balancer

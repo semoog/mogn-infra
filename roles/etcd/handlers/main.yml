@@ -1,17 +1,17 @@
 ---
-- name: cleanup etcd tarball
+- name: etcd | cleanup tar
   file:
     path: /tmp/etcd-v{{ ETCD_VERSION }}-linux-amd64.tar.gz
     state: absent
   listen: cleanup-etcd-install
 
-- name: cleanup etcd tmp directory
+- name: etcd | cleanup tmp
   file:
     path: /tmp/etcd
     state: absent
   listen: cleanup-etcd-install
 
-- name: restore perms on server key file
+- name: etcd | restore perms on server key file
   file:
     path: "{{ playbook_dir }}/certs/{{ inventory_hostname }}-key.pem"
     owner: root
@@ -20,6 +20,6 @@
   delegate_to: 127.0.0.1
   listen: cleanup-etcd-certs
 
-- name: reload systemctl
+- name: systemctl | daemon-reload
   command: systemctl daemon-reload
   listen: systemctl-daemon-reload

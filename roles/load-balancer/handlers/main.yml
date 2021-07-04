@@ -1,0 +1,8 @@
+---
+
+- name: nginx | reload
+  service:
+    name: nginx
+    enabled: yes
+    state: reloaded
+  listen: reload-nginx
