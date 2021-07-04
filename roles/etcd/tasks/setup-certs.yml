@@ -1,0 +1,85 @@
+---
+
+# => checks
+
+- name: check for existing cert
+  stat:
+    path: "{{ playbook_dir }}/certs/ca.pem"
+  register: cacert
+  delegate_to: 127.0.0.1
+
+- name: check for existing node cert
+  stat:
+    path: "{{ playbook_dir }}/certs/{{ inventory_hostname }}.pem"
+  register: node_etcd_cert
+  delegate_to: 127.0.0.1
+
+- name: check for existing server key
+  stat:
+    path: /etc/etcd/server.key
+  register: node_etcd_server_key
+
+# => cert setup
+
+- name: etcd certs | create local directory for cert storage
+  file:
+    path: "{{ playbook_dir }}/certs"
+    state: directory
+  delegate_to: 127.0.0.1
+
+- name: etcd certs | create the CA certificate to be used by all the etcd servers and clients
+  shell: "cd {{ playbook_dir }}/certs && echo '{\"CN\":\"CA\",\"key\":{\"algo\":\"rsa\",\"size\":2048}}' | cfssl gencert -initca - | cfssljson -bare ca -"
+  delegate_to: 127.0.0.1
+  when: not cacert.stat.exists
+
+- name: etcd certs | create the CA certificate to be used by all the etcd servers and clients part 2
+  shell: "cd {{ playbook_dir }}/certs && echo '{\"signing\":{\"default\":{\"expiry\":\"43800h\",\"usages\":[\"signing\",\"key encipherment\",\"server auth\",\"client auth\"]}}}' > ca-config.json"
+  delegate_to: 127.0.0.1
+  when: not cacert.stat.exists
+
+- name: etcd certs | create the CA certificate to be used by each node in the cluster
+  shell: "cd {{ playbook_dir }}/certs && echo '{\"CN\":\"'{{ inventory_hostname }}'\",\"hosts\":[\"\"],\"key\":{\"algo\":\"rsa\",\"size\":2048}}' | cfssl gencert -config=ca-config.json -ca=ca.pem -ca-key=ca-key.pem -hostname=\"{{ hostvars[inventory_hostname].ip }},{{ inventory_hostname }}\" - | cfssljson -bare {{ inventory_hostname }}"
+  delegate_to: 127.0.0.1
+  when: not node_etcd_cert.stat.exists
+
+- name: etcd certs | create node directory for etcd certs
+  file:
+    path: /etc/etcd
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
+- name: etcd certs | copy CA cert to node etcd directory
+  copy:
+    src: "{{ playbook_dir }}/certs/ca.pem"
+    dest: "/etc/etcd/etcd-ca.crt"
+    owner: root
+    group: root
+    mode: 0600
+
+- name: etcd certs | copy node server cert to node etcd directory
+  copy:
+    src: "{{ playbook_dir }}/certs/{{ inventory_hostname }}.pem"
+    dest: "/etc/etcd/server.crt"
+    owner: root
+    group: root
+    mode: 0600
+
+- name: etcd certs | take ownership of server key file (so we can copy it out to the node)
+  file:
+    path: "{{ playbook_dir }}/certs/{{ inventory_hostname }}-key.pem"
+    owner: root
+    group: root
+    mode: 0755 # yeah I know
+  delegate_to: 127.0.0.1
+  # when: not node_etcd_server_key.stat.exists
+
+- name: etcd certs | copy node server key to node etcd directory
+  copy:
+    src: "{{ playbook_dir }}/certs/{{ inventory_hostname }}-key.pem"
+    dest: "/etc/etcd/server.key"
+    owner: root
+    group: root
+    mode: 0600
+  # notify: cleanup-etcd-certs
