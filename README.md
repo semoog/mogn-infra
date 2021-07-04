@@ -77,7 +77,7 @@ _---_
     kubectl get nodes
 <br>
 
-Browse to the DNS_NAME url (e.g `rancher.mogn.co`) that you set in the `provision` playbook and you should see the rancher welcome screen.
+Browse to the `DNS_NAME` url (e.g `rancher.mogn.co`) that you set in the `vars/env.yml` file and you should see the rancher welcome screen.
 <br>
 <br>
 
