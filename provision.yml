@@ -10,6 +10,8 @@
   hosts: loadbalancers
   gather_facts: False
   become: True
+  vars:
+    INTERFACE: eth0
   vars_files:
     - vars/env.yml
   roles:

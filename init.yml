@@ -28,6 +28,8 @@
 
         K3S_TOKEN: "sup3rS3cr177ok3N"
         DNS_NAME: "rancher.home"
+        VIRTUAL_IP: "192.168.1.100"
+        KEEPALIVED_PASSWORD: "k33p5h174l1v3y0"
       mode: 0664
 
   - debug:

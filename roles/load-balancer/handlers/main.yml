@@ -6,3 +6,10 @@
     enabled: yes
     state: reloaded
   listen: reload-nginx
+
+- name: keepalived | reload
+  service:
+    name: keepalived
+    enabled: yes
+    state: reloaded
+  listen: reload-keepalived
