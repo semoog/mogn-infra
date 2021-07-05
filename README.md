@@ -77,7 +77,7 @@ _---_
     kubectl get nodes
 <br>
 
-Browse to the `DNS_NAME` url (e.g `rancher.mogn.co`) that you set in the `vars/env.yml` file and you should see the rancher welcome screen.
+Create a DNS record or /etc/hosts entry for the load balancer or one of the rancher servers if you didn't set any up. Browse to the `DNS_NAME` url (e.g `rancher.mogn.co`) that you set in the `vars/env.yml` file and you should see the Rancher welcome screen.
 <br>
 <br>
 
