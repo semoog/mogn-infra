@@ -6,42 +6,32 @@
   roles:
     - common
 
-- name: Server | Provision (etcd + k3s)
+- name: Server | Provision
   hosts: servers
   become: True
   vars:
+    CERT_MANAGER_VERSION: v1.0.4
     ETCD_DOWNLOAD_URL: https://storage.googleapis.com/etcd
     ETCD_VERSION: 3.5.0
     K3S_VERSION: v1.21.2+k3s1
+    RANCHER_VERSION: 2.5.8
   vars_files:
     - vars/env.yml
   roles:
-    - etcd
-    - k3s-server
+    - server
 
-- name: Worker / Agent | Provision (k3s)
+- name: Agent | Provision
   hosts: agents
   become: True
   vars_files:
     - vars/env.yml
   roles:
-    - k3s-agent
+    - agent
   
 - import_playbook: kubectl.yml
   when: nokubectl is undefined or nokubectl == False
 
-- name: Server | Provision (rancher)
-  hosts: servers
-  become: False
-  vars:
-    CERT_MANAGER_VERSION: v1.0.4
-    RANCHER_VERSION: 2.5.8
-  vars_files:
-    - vars/env.yml
-  roles:
-    - rancher
-
-- name: Load Balancer | Provision (nginx)
+- name: Load Balancer | Provision
   hosts: loadbalancers
   gather_facts: False
   become: True

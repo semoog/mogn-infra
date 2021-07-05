@@ -1,0 +1,23 @@
+---
+
+# => checks
+
+- name: etcd | check etcd version
+  shell: "etcd --version | grep {{ ETCD_VERSION }}"
+  register: etcd_version_match
+  changed_when: False
+  ignore_errors: yes
+
+# install and configure etcd
+
+- import_tasks: etcd.yml
+  when: etcd_version_match.rc != 0
+
+# => install and configure k3s
+
+- import_tasks: k3s.yml
+
+# => install and configure rancher
+
+- import_tasks: rancher.yml
+  become: False

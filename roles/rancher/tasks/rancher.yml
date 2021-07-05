@@ -1,8 +1,0 @@
----
-
-# => install
-
-- name: rancher | install
-  shell: "helm install rancher rancher-stable/rancher --namespace cattle-system --set hostname={{ DNS_NAME }} --version {{ RANCHER_VERSION }}"
-  when: rancher_installed.rc != 0
-  delegate_to: 127.0.0.1

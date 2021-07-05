@@ -9,7 +9,7 @@
   register: cattle_system_namespace
   delegate_to: 127.0.0.1
 
-- name: cert-manager | prerequisite check | cert-manager installed
+- name: rancher | prerequisite check | cert-manager installed
   shell: kubectl get pods -n cert-manager | grep cert-manager
   changed_when: False
   ignore_errors: yes
@@ -37,10 +37,12 @@
 
 # => install and configure cert-manager
 
-- import_tasks: cert-manager.yml
+- import_tasks: rancher-certs.yml
   when: cert_manager_installed.rc != 0
 
-# => install and configure rancher
+# => install
 
-- import_tasks: rancher.yml
+- name: rancher | install
+  shell: "helm install rancher rancher-stable/rancher --namespace cattle-system --set hostname={{ DNS_NAME }} --version {{ RANCHER_VERSION }}"
   when: rancher_installed.rc != 0
+  delegate_to: 127.0.0.1

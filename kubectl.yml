@@ -1,11 +1,11 @@
 ---
 
-- name: control node kubectl setup
+- name: Control Node | kubectl Setup
   hosts: servers[0]
   user: mogn
   tasks:
 
-  - name: grab kubeconfig from the first server node
+  - name: kubectl | kubeconfig | grab kubeconfig from the first server node
     become: True
     changed_when: False
     fetch:
@@ -13,7 +13,7 @@
       dest: "{{ playbook_dir }}/kubeconfig/kubeconfig.yml"
       flat: yes
 
-  - name: replace 127.0.0.1 with k3s ip
+  - name: kubectl | kubeconfig | replace 127.0.0.1 with k3s ip
     replace:
       path: "{{ playbook_dir }}/kubeconfig/kubeconfig.yml"
       regexp: "127.0.0.1"
@@ -21,21 +21,21 @@
     changed_when: False
     delegate_to: 127.0.0.1
   
-  - name: init .kube
+  - name: kubectl | init .kube
     file:
       path: "$HOME/.kube"
       state: directory
       mode: 0775
     delegate_to: 127.0.0.1
 
-  - name: copy kubeconfig to .kube
+  - name: kubectl | copy kubeconfig to .kube
     copy:
       src: "{{ playbook_dir }}/kubeconfig/kubeconfig.yml"
       dest: "$HOME/.kube/{{ inventory_hostname }}-kubeconfig.yml"
       mode: '0644'
     delegate_to: 127.0.0.1
 
-  - name: point KUBECONFIG at the new cluster
+  - name: kubectl | point KUBECONFIG at the new cluster
     lineinfile:
       path: $HOME/.profile
       line: "export KUBECONFIG=\"$KUBECONFIG:$HOME/.kube/{{ inventory_hostname }}-kubeconfig.yml\""

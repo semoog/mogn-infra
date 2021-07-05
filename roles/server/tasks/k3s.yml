@@ -2,7 +2,7 @@
 
 # => checks
 
-- name: k3s | get service facts
+- name: k3s | prerequisite | get service facts
   service_facts:
 
 # => install

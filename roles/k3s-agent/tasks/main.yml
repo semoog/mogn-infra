@@ -1,5 +1,0 @@
----
-
-# => install and configure k3s
-
-- import_tasks: k3s-agent.yml
