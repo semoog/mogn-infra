@@ -4,4 +4,35 @@
 
 # => install
 
+- name: keepalived | install
+  package: 
+    name: keepalived
+    state: latest
+
 # => configure
+
+- name: keepalived | /bin/check_nginx.sh
+  copy:
+    dest: /bin/check_nginx.sh
+    content: |
+      #!/bin/sh
+      if [ -z "`pidof nginx`" ]; then
+        exit 1
+      fi
+    owner: root
+    group: root
+    mode: 0755
+
+- name: keepalived | keepalived.conf
+  template:
+    src: templates/keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload-keepalived
+
+# => enable service
+
+- name: keepalived | enable / start service
+  service: name=keepalived.service state=started enabled=yes
