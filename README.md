@@ -99,7 +99,7 @@ Create a DNS record or /etc/hosts entry for the load balancer or one of the ranc
 
 - ~~Part 4 - nginx rancher load balancer~~
     - merged with [PR - nginx lb](https://github.com/semoog/mogn-infra/pull/3)
-    - keepalived HA [PR - keepalived](https://github.com/semoog/mogn-infra/pull/4)
+    - keepalived HA merged with [PR - keepalived](https://github.com/semoog/mogn-infra/pull/4)
 
 - Part 5 - TLS
 
