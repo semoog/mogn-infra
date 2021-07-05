@@ -33,12 +33,15 @@ Configures and spins up a highly available* [etcd](https://etcd.io/), [k3s](http
 
         [loadbalancers] <- optional
         lb-1 ip=<lb-1-ip>
+        lb-2 ip=<lb-2-ip>
 - a `vars/env.yml` file:
 
         ---
 
         K3S_TOKEN: "<CUSTOM_TOKEN>"
         DNS_NAME: "<CUSTOM_DNS_NAME>"
+        VIRTUAL_IP: "<CUSTOM_VIRTUAL_IP>"
+        KEEPALIVED_PASSWORD: "<CUSTOM_PASSWORD>"
         
      A template for these files can be created with `ansible-playbook init.yml`
 <br>
@@ -96,7 +99,7 @@ Create a DNS record or /etc/hosts entry for the load balancer or one of the ranc
 
 - ~~Part 4 - nginx rancher load balancer~~
     - merged with [PR - nginx lb](https://github.com/semoog/mogn-infra/pull/3)
-    - TODO: keepalived HA
+    - keepalived HA [PR - keepalived](https://github.com/semoog/mogn-infra/pull/4)
 
 - Part 5 - TLS
 
