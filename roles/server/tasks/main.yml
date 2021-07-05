@@ -16,6 +16,11 @@
 # => install and configure k3s
 
 - import_tasks: k3s.yml
+  
+# => configure kubectl for control node 
+
+- import_tasks: kubectl.yml
+  when: nokubectl is undefined or nokubectl == False
 
 # => install and configure rancher
 

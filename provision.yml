@@ -1,47 +1,46 @@
 ---
 
-# - name: Common
-#   hosts: all
-#   become: True
-#   roles:
-#     - common
+- name: Common
+  hosts: all
+  become: True
+  roles:
+    - common
 
-# - name: Server | Provision
-#   hosts: servers
-#   become: True
-#   vars:
-#     CERT_MANAGER_VERSION: v1.0.4
-#     ETCD_DOWNLOAD_URL: https://storage.googleapis.com/etcd
-#     ETCD_VERSION: 3.5.0
-#     K3S_VERSION: v1.21.2+k3s1
-#     RANCHER_VERSION: 2.5.8
-#   vars_files:
-#     - vars/env.yml
-#   roles:
-#     - server
+- name: Load Balancer | Provision
+  hosts: loadbalancers
+  gather_facts: False
+  become: True
+  vars_files:
+    - vars/env.yml
+  roles:
+    - load-balancer
 
-# - name: Load Balancer | Provision
-#   hosts: loadbalancers
-#   gather_facts: False
-#   become: True
-#   vars_files:
-#     - vars/env.yml
-#   roles:
-#     - load-balancer
+- name: Server | Provision
+  hosts: servers
+  become: True
+  vars:
+    CERT_MANAGER_VERSION: v1.0.4
+    ETCD_DOWNLOAD_URL: https://storage.googleapis.com/etcd
+    ETCD_VERSION: 3.5.0
+    K3S_VERSION: v1.21.2+k3s1
+    RANCHER_VERSION: 2.5.8
+  vars_files:
+    - vars/env.yml
+  roles:
+    - server
 
-# - name: Agent | Provision
-#   hosts: agents
-#   become: True
-#   vars_files:
-#     - vars/env.yml
-#   roles:
-#     - agent
-  
-# - import_playbook: kubectl.yml
-#   when: nokubectl is undefined or nokubectl == False
+- name: Agent | Provision
+  hosts: agents
+  become: True
+  vars:
+    SERVER_ENDPOINT: "{{ groups['loadbalancers'][0] is defined and hostvars[groups['loadbalancers'][0]].ip or hostvars[groups['servers'][0]].ip }}"
+  vars_files:
+    - vars/env.yml
+  roles:
+    - agent
 
 - name: Finished!
-  hosts: 127.0.0.1
+  hosts: servers[0]
   vars:
     SERVER_ENDPOINT: "{{ groups['loadbalancers'][0] is defined and hostvars[groups['loadbalancers'][0]].ip or hostvars[groups['servers'][0]].ip }}"
   vars_files:

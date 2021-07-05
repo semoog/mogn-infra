@@ -1,0 +1,43 @@
+---
+
+- name: kubectl | kubeconfig | grab kubeconfig from the first server node
+  changed_when: False
+  fetch:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: "{{ playbook_dir }}/kubeconfig/kubeconfig.yml"
+    flat: yes
+  delegate_to: "{{ hostvars[groups['servers'][0]].ip }}"
+
+- name: kubectl | kubeconfig | replace 127.0.0.1 with k3s server endpoint ip
+  become: False
+  replace:
+    path: "{{ playbook_dir }}/kubeconfig/kubeconfig.yml"
+    regexp: "127.0.0.1"
+    replace: "{{ DNS_NAME }}"
+    # replace: "{{ hostvars[groups['servers'][0]].ip }}"
+  changed_when: False
+  delegate_to: 127.0.0.1
+
+- name: kubectl | init .kube
+  become: False
+  file:
+    path: "$HOME/.kube"
+    state: directory
+    mode: 0775
+  delegate_to: 127.0.0.1
+
+- name: kubectl | copy kubeconfig to .kube
+  become: False
+  copy:
+    src: "{{ playbook_dir }}/kubeconfig/kubeconfig.yml"
+    dest: "$HOME/.kube/{{ inventory_hostname }}-kubeconfig.yml"
+    mode: '0644'
+  changed_when: False
+  delegate_to: 127.0.0.1
+
+- name: kubectl | point KUBECONFIG at the new cluster
+  become: False
+  lineinfile:
+    path: $HOME/.profile
+    line: "export KUBECONFIG=\"$KUBECONFIG:$HOME/.kube/{{ inventory_hostname }}-kubeconfig.yml\""
+  delegate_to: 127.0.0.1
