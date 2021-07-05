@@ -20,6 +20,15 @@
   roles:
     - server
 
+- name: Load Balancer | Provision
+  hosts: loadbalancers
+  gather_facts: False
+  become: True
+  vars_files:
+    - vars/env.yml
+  roles:
+    - load-balancer
+
 - name: Agent | Provision
   hosts: agents
   become: True
@@ -30,15 +39,6 @@
   
 - import_playbook: kubectl.yml
   when: nokubectl is undefined or nokubectl == False
-
-- name: Load Balancer | Provision
-  hosts: loadbalancers
-  gather_facts: False
-  become: True
-  vars_files:
-    - vars/env.yml
-  roles:
-    - load-balancer
 
 - name: Finished!
   hosts: 127.0.0.1
