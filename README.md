@@ -10,7 +10,7 @@ Configures and spins up a highly available* [etcd](https://etcd.io/), [k3s](http
 ![example layout](mogn-infra_example-layout.png)
 <br>
 <br>
-*note: rancher / k3s agent role is available, I just don't have any in my cluster yet*
+*not visualized: a rancher / k3s agent role is available, I just don't have any in my cluster yet*
 
 ## Requirements
 
