@@ -1,6 +1,28 @@
 ---
 
-- name: fail2ban | install
-  package: 
-    name: 'fail2ban'
-    state: latest
+- name: Networking | Add IP address of all hosts to all hosts
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '.*{{ item }}$'
+    line: "{{ hostvars[item].ip }} {{item}}"
+    state: present
+  when: hostvars[item].ip is defined
+  with_items: "{{ groups.all }}"
+
+- name: Networking | Add LB / vIP address to all server hosts
+  lineinfile:
+    path: /etc/hosts
+    line: "{{ VIRTUAL_IP is defined and VIRTUAL_IP or hostvars[groups['loadbalancers'][0]].ip }} {{ DNS_NAME }}"
+  when: groups['loadbalancers'][0] is defined
+
+- name: Disable password ssh login
+  lineinfile:
+    path: "/etc/ssh/sshd_config"
+    regex: ^(# *)?PasswordAuthentication
+    line: PasswordAuthentication no
+  notify: restart-ssh
+
+# - name: fail2ban | install
+#   package: 
+#     name: 'fail2ban'
+#     state: latest

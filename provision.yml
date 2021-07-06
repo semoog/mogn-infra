@@ -1,8 +1,12 @@
 ---
 
 - name: Common
-  hosts: all
+  hosts:
+    - servers
+    - agents
   become: True
+  vars_files:
+    - vars/env.yml
   roles:
     - common
 
@@ -21,25 +25,33 @@
   hosts: servers
   become: True
   vars:
-    CERT_MANAGER_VERSION: v1.0.4
-    ETCD_DOWNLOAD_URL: https://storage.googleapis.com/etcd
-    ETCD_VERSION: 3.5.0
-    K3S_VERSION: v1.21.2+k3s1
-    RANCHER_VERSION: 2.5.8
+    CERT_MANAGER_VERSION: 'v1.4.0'
+    ETCD_DOWNLOAD_URL: 'https://storage.googleapis.com/etcd'
+    ETCD_VERSION: '3.5.0'
+    K3S_VERSION: 'v1.20.8+k3s1' # Rancher is not supported on v1.21 yet.
+    RANCHER_VERSION: '2.5.8'
   vars_files:
     - vars/env.yml
   roles:
     - server
 
-- name: Agent | Provision
-  hosts: agents
+# - name: Agent | Provision
+#   hosts: agents
+#   become: True
+#   vars:
+#     SERVER_ENDPOINT: "{{ groups['loadbalancers'][0] is defined and hostvars[groups['loadbalancers'][0]].ip or hostvars[groups['servers'][0]].ip }}"
+#   vars_files:
+#     - vars/env.yml
+#   roles:
+#     - agent
+
+- name: Storage | Provision
+  hosts: storage
   become: True
   vars:
-    SERVER_ENDPOINT: "{{ groups['loadbalancers'][0] is defined and hostvars[groups['loadbalancers'][0]].ip or hostvars[groups['servers'][0]].ip }}"
-  vars_files:
-    - vars/env.yml
+    LONGHORN_VERSION:
   roles:
-    - agent
+    - storage
 
 - name: Finished!
   hosts: servers[0]

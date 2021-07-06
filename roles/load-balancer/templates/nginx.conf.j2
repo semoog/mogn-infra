@@ -8,7 +8,7 @@ events {
 }
 
 stream {
-    upstream rancher_servers_http {
+    upstream k3s_http {
         least_conn;
 {% for server in groups['servers'] %}
         server {{ hostvars[server].ip }}:80 max_fails=3 fail_timeout=5s;
@@ -17,10 +17,10 @@ stream {
 
     server {
         listen 80;
-        proxy_pass rancher_servers_http;
+        proxy_pass k3s_http;
     }
 
-    upstream rancher_servers_https {
+    upstream k3s_https {
         least_conn;
 {% for server in groups['servers'] %}
         server {{ hostvars[server].ip }}:443 max_fails=3 fail_timeout=5s;
@@ -29,10 +29,10 @@ stream {
 
     server {
         listen 443;
-        proxy_pass rancher_servers_https;
+        proxy_pass k3s_https;
     }
 
-    upstream rancher_servers_rancher {
+    upstream rancher {
         least_conn;
 {% for server in groups['servers'] %}
         server {{ hostvars[server].ip }}:6443 max_fails=3 fail_timeout=5s;
@@ -41,6 +41,6 @@ stream {
 
     server {
         listen 6443;
-        proxy_pass rancher_servers_rancher;
+        proxy_pass rancher;
     }
 }

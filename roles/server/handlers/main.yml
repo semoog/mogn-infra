@@ -18,7 +18,7 @@
     owner: root
     group: root
     mode: 0600
-  delegate_to: 127.0.0.1
+  delegate_to: localhost
   listen: cleanup-etcd-certs
 
 - name: systemctl | daemon-reload

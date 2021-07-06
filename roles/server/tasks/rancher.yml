@@ -2,47 +2,54 @@
 
 # => checks
 
-- name: rancher | prerequisite check | cattle-system namespace
-  shell: kubectl get namespaces | grep cattle-system
-  changed_when: False
-  ignore_errors: yes
-  register: cattle_system_namespace
-  delegate_to: 127.0.0.1
+# - name: rancher | prerequisite check | cattle-system namespace
+#   shell: kubectl get namespaces | grep cattle-system
+#   changed_when: False
+#   ignore_errors: yes
+#   register: cattle_system_namespace
+#   delegate_to: localhost
 
-- name: rancher | prerequisite check | cert-manager installed
-  shell: kubectl get pods -n cert-manager | grep cert-manager
-  changed_when: False
-  ignore_errors: yes
-  register: cert_manager_installed
-  delegate_to: 127.0.0.1
+# - name: rancher | prerequisite check | cert-manager installed
+#   shell: kubectl get pods -n cert-manager | grep cert-manager
+#   changed_when: False
+#   ignore_errors: yes
+#   register: cert_manager_installed
+#   delegate_to: localhost
 
 - name: rancher | prerequisite check | rancher installed
   shell: kubectl -n cattle-system rollout status deploy/rancher | grep successfully
   changed_when: False
   ignore_errors: yes
   register: rancher_installed
-  delegate_to: 127.0.0.1
+  delegate_to: localhost
 
 # => prerequisites
 
 - name: rancher | add rancher helm repo
   shell: helm repo add rancher-stable https://releases.rancher.com/server-charts/stable && helm repo update
   changed_when: False
-  delegate_to: 127.0.0.1
+  delegate_to: localhost
 
 - name: rancher | create cattle-system namespace
   command: kubectl create namespace cattle-system
-  when: cattle_system_namespace.rc != 0
-  delegate_to: 127.0.0.1
+  # when: cattle_system_namespace.rc != 0
+  delegate_to: localhost
 
 # => install and configure cert-manager
 
 - import_tasks: rancher-certs.yml
-  when: cert_manager_installed.rc != 0
+  # when: cert_manager_installed.rc != 0
 
 # => install
 
 - name: rancher | install
   shell: "helm install rancher rancher-stable/rancher --namespace cattle-system --set hostname={{ DNS_NAME }} --version {{ RANCHER_VERSION }}"
   when: rancher_installed.rc != 0
-  delegate_to: 127.0.0.1
+  ignore_errors: yes
+  delegate_to: localhost
+
+- name: system | sleep for 120 seconds for Rancher to get fully set up
+  wait_for:
+    timeout: 120
+  when: rancher_installed.rc != 0
+  delegate_to: localhost
