@@ -12,6 +12,11 @@
         [servers]
         node-1 ip=
         node-2 ip=
+        node-3 ip=
+
+        [loadbalancers]
+        lb-1 ip=
+        lb-2 ip=
       mode: 0664
   
   - name: init vars/
@@ -26,10 +31,10 @@
       content: |
         ---
 
-        K3S_TOKEN: "sup3rS3cr177ok3N"
-        DNS_NAME: "rancher.home"
-        VIRTUAL_IP: "192.168.1.100"
-        KEEPALIVED_PASSWORD: "k33p5h174l1v3y0"
+        DNS_NAME: 'rancher.home'
+        K3S_TOKEN: 'sup3rS3cr177ok3N'
+        KEEPALIVED_PASSWORD: 'k33p5h174l1v3y0'
+        VIRTUAL_IP: 'REMOVE THIS IF YOU ARE NOT USING IT'
       mode: 0664
 
   - debug:

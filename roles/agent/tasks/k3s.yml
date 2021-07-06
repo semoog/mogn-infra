@@ -10,6 +10,6 @@
 - name: k3s | install
   shell: curl -sfL https://get.k3s.io | sh -
   environment:
-    K3S_TOKEN: "{{ K3S_TOKEN }}"
-    K3S_URL: "https://{{ SERVER_ENDPOINT }}:6443"
+    # K3S_TOKEN: "{{ K3S_TOKEN }}"
+    K3S_URL: "https://{{ VIRTUAL_IP is defined and VIRTUAL_IP or SERVER_ENDPOINT }}:6443"
   when: ansible_facts.services['k3s-agent.service'] is not defined

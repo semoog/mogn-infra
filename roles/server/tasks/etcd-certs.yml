@@ -6,13 +6,13 @@
   stat:
     path: "{{ playbook_dir }}/certs/ca.pem"
   register: cacert
-  delegate_to: 127.0.0.1
+  delegate_to: localhost
 
 - name: etcd | certs | prerequisite | check for existing node cert
   stat:
     path: "{{ playbook_dir }}/certs/{{ inventory_hostname }}.pem"
   register: node_etcd_cert
-  delegate_to: 127.0.0.1
+  delegate_to: localhost
 
 - name: etcd | certs | prerequisite | check for existing server key
   stat:
@@ -25,21 +25,21 @@
   file:
     path: "{{ playbook_dir }}/certs"
     state: directory
-  delegate_to: 127.0.0.1
+  delegate_to: localhost
 
 - name: etcd | certs | create the CA certificate to be used by all the etcd servers and clients
   shell: "cd {{ playbook_dir }}/certs && echo '{\"CN\":\"CA\",\"key\":{\"algo\":\"rsa\",\"size\":2048}}' | cfssl gencert -initca - | cfssljson -bare ca -"
-  delegate_to: 127.0.0.1
+  delegate_to: localhost
   when: not cacert.stat.exists
 
 - name: etcd | certs | create the CA certificate to be used by all the etcd servers and clients part 2
   shell: "cd {{ playbook_dir }}/certs && echo '{\"signing\":{\"default\":{\"expiry\":\"43800h\",\"usages\":[\"signing\",\"key encipherment\",\"server auth\",\"client auth\"]}}}' > ca-config.json"
-  delegate_to: 127.0.0.1
+  delegate_to: localhost
   when: not cacert.stat.exists
 
 - name: etcd | certs | create the CA certificate to be used by each node in the cluster
   shell: "cd {{ playbook_dir }}/certs && echo '{\"CN\":\"'{{ inventory_hostname }}'\",\"hosts\":[\"\"],\"key\":{\"algo\":\"rsa\",\"size\":2048}}' | cfssl gencert -config=ca-config.json -ca=ca.pem -ca-key=ca-key.pem -hostname=\"{{ hostvars[inventory_hostname].ip }},{{ inventory_hostname }}\" - | cfssljson -bare {{ inventory_hostname }}"
-  delegate_to: 127.0.0.1
+  delegate_to: localhost
   when: not node_etcd_cert.stat.exists
 
 - name: etcd | certs | create node directory for etcd certs
@@ -72,7 +72,7 @@
     owner: root
     group: root
     mode: 0755 # yeah I know
-  delegate_to: 127.0.0.1
+  delegate_to: localhost
   # when: not node_etcd_server_key.stat.exists
 
 - name: etcd | certs | copy node server key to node etcd directory

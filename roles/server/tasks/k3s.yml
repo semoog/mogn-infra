@@ -11,12 +11,17 @@
   set_fact: etcd_endpoints={%for host in groups['servers']%}https://{{hostvars[host].ip}}:2379{% if not loop.last %},{% endif %}{% endfor %}
 
 - name: k3s | install
-  shell: curl -sfL https://get.k3s.io | sh -
+  shell: "curl -sfL https://get.k3s.io | sh -s - --tls-san {{ VIRTUAL_IP is defined and VIRTUAL_IP or SERVER_ENDPOINT }}"
   environment:
     INSTALL_K3S_VERSION: "{{ K3S_VERSION }}"
     K3S_DATASTORE_ENDPOINT: "{{ etcd_endpoints }}"
     K3S_DATASTORE_CAFILE: '/etc/etcd/etcd-ca.crt'
     K3S_DATASTORE_CERTFILE: '/etc/etcd/server.crt'
     K3S_DATASTORE_KEYFILE: '/etc/etcd/server.key'
-    K3S_TOKEN: "{{ K3S_TOKEN }}"
+  when: ansible_facts.services['k3s.service'] is not defined
+
+- name: system | sleep for 60 seconds for k3s to get fully set up
+  wait_for:
+    timeout: 60
+  delegate_to: localhost
   when: ansible_facts.services['k3s.service'] is not defined

@@ -7,27 +7,37 @@
   changed_when: False
   ignore_errors: yes
   register: cert_manager_namespace
-  delegate_to: 127.0.0.1
+  delegate_to: localhost
 
 # => configure
 
 - name: rancher | certs | CustomResourceDefinition
   shell: "kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/{{ CERT_MANAGER_VERSION }}/cert-manager.crds.yaml"
-  when: cert_manager_namespace.rc != 0
-  delegate_to: 127.0.0.1
+  changed_when: False
+  # when: cert_manager_namespace.rc != 0
+  delegate_to: localhost
 
 - name: rancher | certs | add jetstack helm repo
   shell: helm repo add jetstack https://charts.jetstack.io && helm repo update
   changed_when: False
-  delegate_to: 127.0.0.1
+  delegate_to: localhost
 
 - name: rancher | certs | create cert-manager namespace
   command: kubectl create namespace cert-manager
-  when: cert_manager_namespace.rc != 0
-  delegate_to: 127.0.0.1
+  # when: cert_manager_namespace.rc != 0
+  changed_when: False
+  ignore_errors: yes
+  delegate_to: localhost
 
 # => install
 
 - name: rancher | certs | cert-manager install
   shell: "helm install cert-manager jetstack/cert-manager --namespace cert-manager --version {{ CERT_MANAGER_VERSION }}"
-  delegate_to: 127.0.0.1
+  when: cert_manager_namespace.rc != 0
+  delegate_to: localhost
+
+- name: system | sleep for 60 seconds for cert-manager to get fully set up
+  wait_for:
+    timeout: 60
+  when: cert_manager_namespace.rc != 0
+  delegate_to: localhost
