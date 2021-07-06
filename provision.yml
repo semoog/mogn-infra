@@ -25,6 +25,9 @@
   hosts: servers
   become: True
   vars:
+    # Use the load balancer IP if it exists, otherwise use the first server IP. Note: VIRTUAL_IP always takes presedence over this.
+    SERVER_ENDPOINT: "{{ groups['loadbalancers'][0] is defined and hostvars[groups['loadbalancers'][0]].ip or hostvars[groups['servers'][0]].ip }}"
+  vars:
     CERT_MANAGER_VERSION: 'v1.4.0'
     ETCD_DOWNLOAD_URL: 'https://storage.googleapis.com/etcd'
     ETCD_VERSION: '3.5.0'
@@ -35,15 +38,16 @@
   roles:
     - server
 
-# - name: Agent | Provision
-#   hosts: agents
-#   become: True
-#   vars:
-#     SERVER_ENDPOINT: "{{ groups['loadbalancers'][0] is defined and hostvars[groups['loadbalancers'][0]].ip or hostvars[groups['servers'][0]].ip }}"
-#   vars_files:
-#     - vars/env.yml
-#   roles:
-#     - agent
+- name: Agent | Provision
+  hosts: agents
+  become: True
+  vars:
+    # Use the load balancer IP if it exists, otherwise use the first server IP. Note: VIRTUAL_IP always takes presedence over this.
+    SERVER_ENDPOINT: "{{ groups['loadbalancers'][0] is defined and hostvars[groups['loadbalancers'][0]].ip or hostvars[groups['servers'][0]].ip }}"
+  vars_files:
+    - vars/env.yml
+  roles:
+    - agent
 
 - name: Storage | Provision
   hosts: storage
@@ -56,10 +60,11 @@
 - name: Finished!
   hosts: servers[0]
   vars:
+    # Use the load balancer IP if it exists, otherwise use the first server IP. Note: VIRTUAL_IP always takes presedence over this.
     SERVER_ENDPOINT: "{{ groups['loadbalancers'][0] is defined and hostvars[groups['loadbalancers'][0]].ip or hostvars[groups['servers'][0]].ip }}"
   vars_files:
     - vars/env.yml
   tasks:
 
     - debug:
-        msg: "!! Done. Create a DNS record or /etc/hosts entry for the load balancer / server ({{ SERVER_ENDPOINT }} -> {{ DNS_NAME }}), then browse to {{ DNS_NAME }} to finish Rancher configuration. Don't forget to source ~/.profile for kubectl access !!"
+        msg: "!! Done. Create a DNS record or /etc/hosts entry for the load balancer / server ({{ VIRTUAL_IP is defined and VIRTUAL_IP or SERVER_ENDPOINT }} -> {{ DNS_NAME }}), then browse to {{ DNS_NAME }} to finish Rancher configuration. Don't forget to source ~/.profile for kubectl access !!"

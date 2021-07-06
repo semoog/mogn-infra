@@ -13,6 +13,7 @@
 
 - name: rancher | certs | CustomResourceDefinition
   shell: "kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/{{ CERT_MANAGER_VERSION }}/cert-manager.crds.yaml"
+  changed_when: False
   # when: cert_manager_namespace.rc != 0
   delegate_to: localhost
 
@@ -24,6 +25,8 @@
 - name: rancher | certs | create cert-manager namespace
   command: kubectl create namespace cert-manager
   # when: cert_manager_namespace.rc != 0
+  changed_when: False
+  ignore_errors: yes
   delegate_to: localhost
 
 # => install

@@ -2,20 +2,6 @@
 
 # => checks
 
-# - name: rancher | prerequisite check | cattle-system namespace
-#   shell: kubectl get namespaces | grep cattle-system
-#   changed_when: False
-#   ignore_errors: yes
-#   register: cattle_system_namespace
-#   delegate_to: localhost
-
-# - name: rancher | prerequisite check | cert-manager installed
-#   shell: kubectl get pods -n cert-manager | grep cert-manager
-#   changed_when: False
-#   ignore_errors: yes
-#   register: cert_manager_installed
-#   delegate_to: localhost
-
 - name: rancher | prerequisite check | rancher installed
   shell: kubectl -n cattle-system rollout status deploy/rancher | grep successfully
   changed_when: False
@@ -32,13 +18,13 @@
 
 - name: rancher | create cattle-system namespace
   command: kubectl create namespace cattle-system
-  # when: cattle_system_namespace.rc != 0
+  changed_when: False
+  ignore_errors: yes
   delegate_to: localhost
 
 # => install and configure cert-manager
 
 - import_tasks: rancher-certs.yml
-  # when: cert_manager_installed.rc != 0
 
 # => install
 
@@ -48,8 +34,13 @@
   ignore_errors: yes
   delegate_to: localhost
 
-- name: system | sleep for 120 seconds for Rancher to get fully set up
-  wait_for:
-    timeout: 120
+- name: rancher | wait for rollout to complete
+  shell: "kubectl -n cattle-system rollout status deploy/rancher"
+  changed_when: False
+  register: rancher
+  until:      
+    - '" successfully "  in rancher.stdout'      
+  retries: 12
+  delay: 10
   when: rancher_installed.rc != 0
   delegate_to: localhost

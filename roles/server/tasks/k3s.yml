@@ -11,7 +11,7 @@
   set_fact: etcd_endpoints={%for host in groups['servers']%}https://{{hostvars[host].ip}}:2379{% if not loop.last %},{% endif %}{% endfor %}
 
 - name: k3s | install
-  shell: "curl -sfL https://get.k3s.io | sh -s - --tls-san {{ VIRTUAL_IP }}"
+  shell: "curl -sfL https://get.k3s.io | sh -s - --tls-san {{ VIRTUAL_IP is defined and VIRTUAL_IP or SERVER_ENDPOINT }}"
   environment:
     INSTALL_K3S_VERSION: "{{ K3S_VERSION }}"
     K3S_DATASTORE_ENDPOINT: "{{ etcd_endpoints }}"

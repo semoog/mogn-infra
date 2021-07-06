@@ -1,0 +1,26 @@
+---
+
+# => prerequisites
+
+- name: longhorn | prerequisites | nfs-common
+  package: 
+    name: nfs-common
+    state: latest
+
+- name: longhorn | prerequisites | open-iscsi
+  package: 
+    name: open-iscsi
+    state: latest
+
+# => install
+
+#  Currently using a Rancher project called Storage to manage Longhorn, 
+#  will revisit once I figure out how to create a project through the CLI or something.
+
+# - name: longhorn | create longhorn-system namespace
+#   command: kubectl create namespace longhorn-system
+#   delegate_to: localhost
+  
+# - name: longhorn | install
+#   command: helm install longhorn ./longhorn/chart/ --namespace longhorn-system
+#   delegate_to: localhost

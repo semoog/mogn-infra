@@ -1,6 +1,6 @@
 ---
 
-# => checks
+# # => checks
 
 - name: etcd | check etcd version
   shell: "etcd --version | grep {{ ETCD_VERSION }}"
@@ -24,6 +24,6 @@
 
 # => install and configure rancher
 
-# - import_tasks: rancher.yml
-#   become: False
-#   delegate_to: localhost
+- import_tasks: rancher.yml
+  become: False
+  delegate_to: localhost
